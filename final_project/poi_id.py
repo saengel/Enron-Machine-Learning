@@ -9,6 +9,8 @@ from feature_format import featureFormat, targetFeatureSplit
 from tester import dump_classifier_and_data
 import pandas as pd
 
+pd.set_option("display.max_rows", None, "display.max_columns", None)
+
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
 ### The first feature must be "poi".
@@ -23,7 +25,6 @@ df = pd.DataFrame.from_dict(data_dict)
 df = df.replace(to_replace='NaN', value=pd.NA)
 df = df.dropna(axis=1, subset=['from_poi_to_this_person', 'from_this_person_to_poi','to_messages','from_messages'])
 df = df.replace(to_replace=pd.NA, value='NaN')
-print(df)
 
 ### Task 3: Create new feature(s)
 ### Store to my_dataset for easy export below.
@@ -68,6 +69,8 @@ features_train, features_test, labels_train, labels_test = \
 # Metrics Imports
 from sklearn.metrics import f1_score
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
 
 metrics = []
 
@@ -83,7 +86,13 @@ pred = clf.predict(features_test)
 
 nb_accuracy = accuracy_score(pred, labels_test)
 nb_f1 = f1_score(pred, labels_test, average=None)
-metrics.append({"Algorithm": "Naive Bayes", "Accuracy": nb_accuracy, "F1 Score": nb_f1})
+nb_precision = precision_score(pred, labels_test, average=None)
+nb_recall = recall_score(pred, labels_test, average=None)
+metrics.append({"Algorithm": "Naive Bayes",
+                "Accuracy": nb_accuracy,
+                "F1 Score": nb_f1,
+                "Precision": nb_precision,
+                "Recall": nb_accuracy})
 
 # K-Means
 from sklearn.cluster import KMeans
@@ -92,7 +101,13 @@ clf.fit(features_train, labels_train)
 pred = clf.predict(features_test)
 kmeans_accuracy = accuracy_score(pred, labels_test)
 kmeans_f1 = f1_score(pred, labels_test, average=None)
-metrics.append({"Algorithm": "K-Means Clustering", "Accuracy": kmeans_accuracy, "F1 Score": kmeans_f1})
+kmeans_precision = precision_score(pred, labels_test, average=None)
+kmeans_recall = recall_score(pred, labels_test, average=None)
+metrics.append({"Algorithm": "K-Means Clustering",
+                "Accuracy": kmeans_accuracy,
+                "F1 Score": kmeans_f1,
+                "Precision": kmeans_precision,
+                "Recall": kmeans_recall})
 
 # Decision Tree
 from sklearn import tree
@@ -101,7 +116,13 @@ clf = clf.fit(features_train, labels_train)
 pred = clf.predict(features_test)
 dtree_accuracy = accuracy_score(pred, labels_test)
 dtree_f1 = f1_score(pred, labels_test, average=None)
-metrics.append({"Algorithm": "Decision Tree", "Accuracy": dtree_accuracy, "F1 Score": dtree_f1})
+dtree_precision = precision_score(pred, labels_test, average=None)
+dtree_recall = recall_score(pred, labels_test, average=None)
+metrics.append({"Algorithm": "Decision Tree",
+                "Accuracy": dtree_accuracy,
+                "F1 Score": dtree_f1,
+                "Precision": dtree_precision,
+                "Recall": dtree_recall})
 
 # SVM
 from sklearn.svm import SVC
@@ -111,7 +132,13 @@ clf.fit(features_train, labels_train)
 pred = clf.predict(features_test)
 svm_accuracy = accuracy_score(pred, labels_test)
 svm_f1 = f1_score(pred, labels_test, average=None)
-metrics.append({"Algorithm": "SVM", "Accuracy": svm_accuracy, "F1 Score": svm_f1})
+svm_precision = precision_score(pred, labels_test, average=None)
+svm_recall = recall_score(pred, labels_test, average=None)
+metrics.append({"Algorithm": "SVM",
+                "Accuracy": svm_accuracy,
+                "F1 Score": svm_f1,
+                "Precision": svm_precision,
+                "Recall": svm_recall})
 
 df = pd.DataFrame.from_dict(metrics)
 print(df)
